@@ -14,7 +14,7 @@ require("dotenv").config();
 const router = require("./router.js");
 
 const PORT = process.env.PORT || process.env.NODE_PORT || 3000;
-const DB_URI = process.env.MONGODB_URI || "mongodb://localhost/DomoMaker";
+const DB_URI = process.env.MONGODB_URI || "mongodb://localhost/DomoMaker-D";
 
 mongoose.connect(DB_URI).catch((err) => {
     if (err) {

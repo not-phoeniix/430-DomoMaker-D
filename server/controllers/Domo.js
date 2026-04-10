@@ -1,27 +1,12 @@
 const models = require("../models");
 const Domo = models.Domo;
 
-const makerPage = async (req, res) => {
-    try {
-        const docs = await Domo
-            .find({ owner: req.session.account._id })
-            .select("name age")
-            .lean()
-            .exec();
-
-        return res.render("app", { domos: docs });
-
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({ error: "Error retrieving domos!" });
-    }
-};
+const makerPage = async (req, res) => res.render("app");
 
 const makeDomo = async (req, res) => {
     if (!req.body.name || !req.body.age) {
         return req.status(400).json({ error: "Both name and age are required!" });
     }
-
 
     try {
         const newDomo = new Domo({
@@ -32,7 +17,7 @@ const makeDomo = async (req, res) => {
 
         await newDomo.save();
 
-        return res.json({ redirect: "/maker" });
+        return res.status(201).json({ name: newDomo.name, age: newDomo.age });
     } catch (err) {
         console.log(err);
 
@@ -44,7 +29,24 @@ const makeDomo = async (req, res) => {
     }
 };
 
+const getDomos = async (req, res) => {
+    try {
+        const docs = await Domo
+            .find({ owner: req.session.account._id })
+            .select("name age")
+            .lean()
+            .exec();
+
+        return res.json({ domos: docs });
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: "Error retrieving domos!" });
+    }
+};
+
 module.exports = {
     makerPage,
     makeDomo,
+    getDomos,
 };
