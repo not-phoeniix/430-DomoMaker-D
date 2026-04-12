@@ -8,13 +8,14 @@ const handleDomo = (e, onDomoAdded) => {
 
     const name = e.target.querySelector("#domoName").value;
     const age = e.target.querySelector("#domoAge").value;
+    const height = e.target.querySelector("#domoHeight").value;
 
-    if (!name || !age) {
+    if (!name || !age || !height) {
         helper.handleError("All fields are required!");
         return false;
     }
 
-    helper.sendPost(e.target.action, { name, age }, onDomoAdded);
+    helper.sendPost(e.target.action, { name, age, height }, onDomoAdded);
     return false;
 };
 
@@ -28,6 +29,9 @@ const DomoForm = (props) => (
     >
         <label htmlFor="name">Name: </label>
         <input id="domoName" type="text" name="name" placeholder="Domo Name" />
+
+        <label htmlFor="height">Height (inches): </label>
+        <input id="domoHeight" type="number" min="0" name="height" />
 
         <label htmlFor="age">Age: </label>
         <input id="domoAge" type="number" min="0" name="age" />
@@ -55,13 +59,21 @@ const DomoList = (props) => {
         );
     }
 
-    const domoNodes = domos.map((domo) => (
-        <div key={domo.id} className="domo">
-            <img src="/assets/img/domoface.jpeg" alt="domo face" class="domoFace" />
-            <h3 className="domoName">Name: {domo.name}</h3>
-            <h3 className="domoAge">Age: {domo.age}</h3>
-        </div>
-    ));
+    const domoNodes = domos.map((domo) => {
+        const feet = Math.floor(domo.height / 12);
+        const inches = domo.height - (feet * 12);
+
+        console.log("height: ", domo.height);
+
+        return (
+            <div key={domo.id} className="domo">
+                <img src="/assets/img/domoface.jpeg" alt="domo face" class="domoFace" />
+                <h3 className="domoName">Name: {domo.name}</h3>
+                <h3 className="domoAge">Age: {domo.age}</h3>
+                <h3 className="domoAge">Height: {feet}' {inches}"</h3>
+            </div>
+        );
+    });
 
     return (
         <div className="domoList">
