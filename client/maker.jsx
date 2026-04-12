@@ -15,7 +15,25 @@ const handleDomo = (e, onDomoAdded) => {
         return false;
     }
 
-    helper.sendPost(e.target.action, { name, age, height }, onDomoAdded);
+    helper.sendFetch(e.target.action, { name, age, height }, onDomoAdded);
+    return false;
+};
+
+const deleteDomo = (e, domo, onDomoDeleted) => {
+    e.preventDefault();
+    helper.hideError();
+
+    if (!domo.name) {
+        helper.handleError("Name required to delete!");
+        return false;
+    }
+
+    helper.sendFetch(
+        "/maker",
+        { name: domo.name },
+        onDomoDeleted,
+        "DELETE"
+    );
     return false;
 };
 
@@ -63,14 +81,17 @@ const DomoList = (props) => {
         const feet = Math.floor(domo.height / 12);
         const inches = domo.height - (feet * 12);
 
-        console.log("height: ", domo.height);
-
         return (
             <div key={domo.id} className="domo">
                 <img src="/assets/img/domoface.jpeg" alt="domo face" class="domoFace" />
                 <h3 className="domoName">Name: {domo.name}</h3>
                 <h3 className="domoAge">Age: {domo.age}</h3>
                 <h3 className="domoAge">Height: {feet}' {inches}"</h3>
+                <a
+                    href="javascript:void(0);"
+                    onClick={(e) => deleteDomo(e, domo, props.triggerReload)}>
+                    delete
+                </a>
             </div>
         );
     });
@@ -85,13 +106,15 @@ const DomoList = (props) => {
 const App = () => {
     const [reloadDomos, setReloadDomos] = React.useState(false);
 
+    const triggerReload = () => setReloadDomos(!reloadDomos);
+
     return (
         <div>
             <div id="makeDomo">
-                <DomoForm triggerReload={() => setReloadDomos(!reloadDomos)} />
+                <DomoForm triggerReload={triggerReload} />
             </div>
             <div id="domos">
-                <DomoList domos={[]} reloadDomos={reloadDomos} />
+                <DomoList domos={[]} reloadDomos={reloadDomos} triggerReload={triggerReload} />
             </div>
         </div>
     );

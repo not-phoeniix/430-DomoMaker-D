@@ -35,6 +35,31 @@ const makeDomo = async (req, res) => {
     }
 };
 
+const deleteDomo = async (req, res) => {
+    if (!req.body.name) {
+        return req.status(400).json({ error: "Missing required properties!" });
+    }
+
+    try {
+        let domo = await Domo
+            .findOne({ name: req.body.name, owner: req.session.account._id })
+            .exec();
+
+        if (!domo) {
+            return res.status(404).json({ error: "Couldn't find domo!" });
+        }
+
+        await domo.deleteOne().exec();
+
+        return res.status(202).json({ message: "success" });
+
+    } catch (err) {
+        console.log(err);
+
+        return res.status(500).json({ error: "An error occured making domo!" });
+    }
+};
+
 const getDomos = async (req, res) => {
     try {
         const docs = await Domo
@@ -54,5 +79,6 @@ const getDomos = async (req, res) => {
 module.exports = {
     makerPage,
     makeDomo,
+    deleteDomo,
     getDomos,
 };

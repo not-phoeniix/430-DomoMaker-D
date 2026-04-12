@@ -14,7 +14,7 @@ const handleLogin = (e) => {
         return false;
     }
 
-    helper.sendPost(e.target.action, { username, pass });
+    helper.sendFetch(e.target.action, { username, pass });
     return false;
 };
 
@@ -36,7 +36,7 @@ const handleSignup = (e) => {
         return false;
     }
 
-    helper.sendPost(e.target.action, { username, pass, pass2 });
+    helper.sendFetch(e.target.action, { username, pass, pass2 });
     return false;
 };
 

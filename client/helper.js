@@ -10,9 +10,9 @@ const handleError = (message) => {
 /* Sends post requests to the server using fetch. Will look for various
    entries in the response JSON object, and will handle them appropriately.
 */
-const sendPost = async (url, data, handler) => {
+const sendFetch = async (url, data, handler, method = "POST") => {
     const response = await fetch(url, {
-        method: 'POST',
+        method,
         headers: {
             'Content-Type': 'application/json',
         },
@@ -41,6 +41,6 @@ const hideError = () => {
 
 module.exports = {
     handleError,
-    sendPost,
+    sendFetch,
     hideError
 };
